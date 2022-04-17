@@ -4,10 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.5062814070351759" />
+        <entry key="app/src/main/res/layout/framelayout_gravity.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/framelayout_view_test.xml" value="0.4564336372847011" />
         <entry key="app/src/main/res/layout/gravity.xml" value="0.4564336372847011" />
         <entry key="app/src/main/res/layout/linearLayoutView.xml" value="0.4564336372847011" />
         <entry key="app/src/main/res/layout/linerlayout_view.xml" value="0.4564336372847011" />
         <entry key="app/src/main/res/layout/padding_margin.xml" value="0.8021474434370448" />
+        <entry key="app/src/main/res/layout/relative_layout_view_test.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/scroll_view_test.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/test1.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/test2.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/test3.xml" value="0.4564336372847011" />
+        <entry key="app/src/main/res/layout/toof.xml" value="0.4564336372847011" />
         <entry key="app/src/main/res/layout/weight.xml" value="0.4564336372847011" />
       </map>
     </option>
