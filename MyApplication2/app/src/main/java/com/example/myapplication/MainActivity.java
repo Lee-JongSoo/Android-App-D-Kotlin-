@@ -38,22 +38,34 @@ public class MainActivity extends AppCompatActivity {
          startActivity(intent);
          */
 
-        Intent intent = new Intent(this, secondActivity.class);
-        intent.putExtra("intent_key", 5);
-        intent.putExtra("intent_key_string", "string");
-        startActivityForResult(intent, REQUEST_CODE);
-    }
+        /**
+         * REQUEST_CODE
+         Intent intent = new Intent(this, secondActivity.class);
+         intent.putExtra("intent_key", 5);
+         intent.putExtra("intent_key_string", "string");
+         startActivityForResult(intent, REQUEST_CODE);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == 200) {
-                String result = data.getStringExtra("result");
-                Log.d("onActivityResult", "result : " + result);
-            } else if (resultCode == 300) {
-                Log.d("onActivityResult", "실패");
-            }
+         @Override
+         protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+         if (requestCode == REQUEST_CODE) {
+         if (resultCode == 200) {
+         String result = data.getStringExtra("result");
+         Log.d("onActivityResult", "result : " + result);
+         } else if (resultCode == 300) {
+         Log.d("onActivityResult", "실패");
+         }
+         }
+         }
+         */
+
+        Intent comingIntent = getIntent();
+        boolean again = comingIntent.getBooleanExtra("again", true);
+
+        if (again == true) {
+            Intent intent = new Intent(this, secondActivity.class);
+            startActivity(intent);
         }
+
     }
 
     @Override

@@ -24,11 +24,14 @@ public class secondActivity extends AppCompatActivity {
 
         /**
          * 작업을 마친 후
+         Intent intent = new Intent();
+         intent.putExtra("result", "성공");
+         setResult(300, intent);
+         finish();
          */
-        Intent intent = new Intent();
-        intent.putExtra("result", "성공");
-        setResult(300, intent);
-        finish();
+
+        Intent intent = new Intent(this, ThirdActivity.class);
+        startActivity(intent);
     }
 
     @Override
