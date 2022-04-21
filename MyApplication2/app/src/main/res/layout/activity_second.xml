@@ -8,9 +8,17 @@
     android:gravity="center">
 
     <TextView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="second Activity"
+        android:textSize="60dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text view"
         android:textSize="60dp" />
 
 </LinearLayout>

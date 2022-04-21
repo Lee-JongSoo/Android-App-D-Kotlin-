@@ -30,8 +30,11 @@ public class secondActivity extends AppCompatActivity {
          finish();
          */
 
-        Intent intent = new Intent(this, ThirdActivity.class);
-        startActivity(intent);
+        /**
+         * LaunchMode and Intend Flag
+         Intent intent = new Intent(this, ThirdActivity.class);
+         startActivity(intent);
+         */
     }
 
     @Override

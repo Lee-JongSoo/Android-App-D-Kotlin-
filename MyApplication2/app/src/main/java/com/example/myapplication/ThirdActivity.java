@@ -12,9 +12,12 @@ public class ThirdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("again", false);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        /**
+         * LaunchMode and Intend Flag
+         Intent intent = new Intent(this, MainActivity.class);
+         intent.putExtra("again", false);
+         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(intent);
+         */
     }
 }
