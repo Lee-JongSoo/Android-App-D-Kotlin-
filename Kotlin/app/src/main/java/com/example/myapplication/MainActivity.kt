@@ -2,7 +2,7 @@ package com.example.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.step1.StringTest
+import com.example.myapplication.step1.AnyTypeTest
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +12,8 @@ class MainActivity : AppCompatActivity() {
 
 //        doTest(FirstTest(::WriteLn))
 //        doTest(DataTest(::WriteLn))
-        doTest(StringTest(::WriteLn))
+//        doTest(StringTest(::WriteLn))
+        doTest(AnyTypeTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
