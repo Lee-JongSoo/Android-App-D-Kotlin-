@@ -2,7 +2,7 @@ package com.example.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.step1.FunctionTest
+import com.example.myapplication.step1.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,11 +10,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        doTest(FirstTest(::WriteLn))
-//        doTest(DataTest(::WriteLn))
-//        doTest(StringTest(::WriteLn))
-//        doTest(AnyTypeTest(::WriteLn))
+        doTest(FirstTest(::WriteLn))
+        doTest(DataTest(::WriteLn))
+        doTest(StringTest(::WriteLn))
+        doTest(AnyTypeTest(::WriteLn))
         doTest(FunctionTest(::WriteLn))
+        doTest(ConditionTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
