@@ -2,7 +2,7 @@ package com.example.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.step1.DataTest
+import com.example.myapplication.step1.StringTest
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +11,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 //        doTest(FirstTest(::WriteLn))
-        doTest(DataTest(::WriteLn))
+//        doTest(DataTest(::WriteLn))
+        doTest(StringTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
