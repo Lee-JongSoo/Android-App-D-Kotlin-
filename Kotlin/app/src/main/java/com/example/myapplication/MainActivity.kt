@@ -4,10 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.step1.*
 import com.example.myapplication.step2.*
-import com.example.myapplication.step3.ClosureTest
-import com.example.myapplication.step3.ExtFunc2Test
-import com.example.myapplication.step3.ExtFuncTest
-import com.example.myapplication.step3.LambdasTest
+import com.example.myapplication.step3.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         doTest(ExtFuncTest(::WriteLn))
         doTest(ExtFunc2Test(::WriteLn))
         doTest(ClosureTest(::WriteLn))
+        doTest(DSLTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
