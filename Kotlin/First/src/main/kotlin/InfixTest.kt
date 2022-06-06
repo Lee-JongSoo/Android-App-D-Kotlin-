@@ -1,5 +1,5 @@
 fun main(args: Array<String>) {
-    
+
     var MyCompany = RankMyCompany()
     MyCompany AddPoint "일이좋다"
     MyCompany AddPoint "자부심"
