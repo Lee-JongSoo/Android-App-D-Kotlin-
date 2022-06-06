@@ -3,6 +3,8 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.step1.*
+import com.example.myapplication.step2.ClassTest
+import com.example.myapplication.step2.PolymorphTest
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         doTest(LabelTest(::WriteLn))
         doTest(CollectionsTest(::WriteLn))
         doTest(ExceptionTest(::WriteLn))
+        doTest(ClassTest(::WriteLn))
+        doTest(PolymorphTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
