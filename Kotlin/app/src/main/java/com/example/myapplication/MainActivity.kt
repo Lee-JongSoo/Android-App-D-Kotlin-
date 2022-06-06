@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         doTest(ExtFunc2Test(::WriteLn))
         doTest(ClosureTest(::WriteLn))
         doTest(DSLTest(::WriteLn))
+        doTest(CurryngTest(::WriteLn))
+        doTest(InfixTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
