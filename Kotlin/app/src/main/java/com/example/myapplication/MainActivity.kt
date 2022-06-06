@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         doTest(DSLTest(::WriteLn))
         doTest(CurryngTest(::WriteLn))
         doTest(InfixTest(::WriteLn))
+        doTest(MultiReturnTest(::WriteLn))
+        doTest(InitTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
