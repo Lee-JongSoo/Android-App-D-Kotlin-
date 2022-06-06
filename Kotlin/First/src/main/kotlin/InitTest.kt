@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 // 3. primitive 형은 불가능함.
 class LateInitTest{
     var normalValue: Int = 3
-    val initTest: Int
+    var initTest: Int
 
     // "선언 = 초기화"를 안해도됨.
     lateinit var late: String
