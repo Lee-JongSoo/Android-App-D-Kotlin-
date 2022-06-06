@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.step1.*
 import com.example.myapplication.step2.*
+import com.example.myapplication.step3.ExtFuncTest
 import com.example.myapplication.step3.LambdasTest
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         doTest(DataClassTest(::WriteLn))
         doTest(ObjectTest(::WriteLn))
         doTest(LambdasTest(::WriteLn))
+        doTest(ExtFuncTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
