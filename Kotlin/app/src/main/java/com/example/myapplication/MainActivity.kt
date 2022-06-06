@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.step1.*
 import com.example.myapplication.step2.ClassTest
+import com.example.myapplication.step2.DataClassTest
 import com.example.myapplication.step2.InterAbstractTest
 import com.example.myapplication.step2.PolymorphTest
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         doTest(ClassTest(::WriteLn))
         doTest(PolymorphTest(::WriteLn))
         doTest(InterAbstractTest(::WriteLn))
+        doTest(DataClassTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
