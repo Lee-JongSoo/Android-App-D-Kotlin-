@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         doTest(ConditionTest(::WriteLn))
         doTest(LabelTest(::WriteLn))
         doTest(CollectionsTest(::WriteLn))
+        doTest(ExceptionTest(::WriteLn))
     }
 
     private fun doTest(o : TestClass){
