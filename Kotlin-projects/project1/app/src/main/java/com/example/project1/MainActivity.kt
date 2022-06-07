@@ -1,27 +1,35 @@
 package com.example.project1
 
 import android.Manifest.*
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.vision.v1.Vision
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse
+import com.google.api.services.vision.v1.VisionRequest
+import com.google.api.services.vision.v1.VisionRequestInitializer
+import com.google.api.services.vision.v1.model.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_analyze_view.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.lang.Exception
 import java.lang.StringBuilder
 import java.lang.ref.WeakReference
-import java.net.CacheResponse
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +37,10 @@ class MainActivity : AppCompatActivity() {
     private val GALLERY_PERMISSION_REQUEST = 1001
     private val FILE_NAME = "picture.jpg"
     private var uploadChooser: UploadChooser? = null
+    private val CLOUD_VISION_API_KEY = "AIzaSyCtQDpRnz902eoIXbVDubst2_hJeIWUl_8"
+    private val ANDROID_PACKAGE_HEADER = "X-Android-Package"
+    private val ANDROID_CERT_HEADER = "X-Android_Cert"
+    private val MAX_LABEL_RESULTS = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,9 +141,58 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestCloudVisionApi(bitmap: Bitmap) {
-
+//        val visionTask = ImageRequestTask(this, )
     }
 
+    private fun prepareImageRequest(bitmap: Bitmap): Vision.Images.Annotate {
+        val httpTransport = AndroidHttp.newCompatibleTransport()
+        val jsonFactory = GsonFactory.getDefaultInstance()
+
+        val requestInitializer = object : VisionRequestInitializer(CLOUD_VISION_API_KEY){
+            @RequiresApi(Build.VERSION_CODES.P)
+            override fun initializeVisionRequest(request: VisionRequest<*>?) {
+                super.initializeVisionRequest(request)
+
+                val packageName = packageName
+                request?.requestHeaders?.set(ANDROID_PACKAGE_HEADER, packageName)
+                val sig = PackageManagerUtil().getSignature(packageManager, packageName)
+                request?.requestHeaders?.set(ANDROID_CERT_HEADER, sig)
+            }
+        }
+        val builder = Vision.Builder(httpTransport, jsonFactory, null)
+        builder.setVisionRequestInitializer(requestInitializer)
+        val vision = builder.build()
+
+        val batchAnnotateImagesRequest = BatchAnnotateImagesRequest()
+        batchAnnotateImagesRequest.requests = object : ArrayList<AnnotateImageRequest>() {
+            init {
+                val annotateImageRequest = AnnotateImageRequest()
+
+                val base64EncodedImage = Image()
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+                val imageBytes = byteArrayOutputStream.toByteArray()
+
+                base64EncodedImage.encodeContent(imageBytes)
+                annotateImageRequest.image = base64EncodedImage
+
+                annotateImageRequest.features = object : ArrayList<Feature>() {
+                    init {
+                        val labelDetection = Feature()
+                        labelDetection.type = "LABEL_DETECTION"
+                        labelDetection.maxResults = MAX_LABEL_RESULTS
+                        add(labelDetection)
+                    }
+                }
+                add(annotateImageRequest)
+            }
+        }
+        val annotateRequest = vision.images().annotate(batchAnnotateImagesRequest)
+        annotateRequest.setDisableGZipContent(true)
+        return annotateRequest
+    }
+
+    @SuppressLint("StaticFieldLeak")
     inner class ImageRequestTask constructor(
         activity: MainActivity,
         val request: Vision.Images.Annotate
@@ -144,6 +205,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg p0: Any?): String {
             try {
                 val response = request.execute()
@@ -155,6 +217,9 @@ class MainActivity : AppCompatActivity() {
             return "분석 실패"
         }
 
+        @Deprecated("Deprecated in Java",
+            ReplaceWith("super.onPostExecute(result)", "android.os.AsyncTask")
+        )
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
         }
