@@ -28,6 +28,7 @@ class UploadChooser : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.upload_chooser, container, false)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setUpListener()
