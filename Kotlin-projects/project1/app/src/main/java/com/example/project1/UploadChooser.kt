@@ -10,15 +10,16 @@ import kotlinx.android.synthetic.main.upload_chooser.*
 class UploadChooser : BottomSheetDialogFragment() {
 
     interface UploadChooserNotifierInterface {
-        fun cameraOnclick()
-        fun galleryOnclick()
+        fun cameraOnClick()
+        fun galleryOnClick()
     }
 
-    var uploadChooserNotifierInterface : UploadChooserNotifierInterface? = null
+    var uploadChooserNotifierInterface: UploadChooserNotifierInterface? = null
 
     fun addNotifier(listener: UploadChooserNotifierInterface) {
-        uploadChooserNotifierInterface  = listener
+        uploadChooserNotifierInterface = listener
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,19 +29,18 @@ class UploadChooser : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.upload_chooser, container, false)
     }
 
-    @Deprecated("Deprecated in Java")
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setUpListener()
+        setupListener()
     }
 
-    private fun setUpListener() {
-        upload_camera.setOnClickListener{
-            uploadChooserNotifierInterface?.cameraOnclick()
+    private fun setupListener() {
+        upload_camera.setOnClickListener {
+            uploadChooserNotifierInterface?.cameraOnClick()
         }
-
         upload_gallery.setOnClickListener {
-            uploadChooserNotifierInterface?.galleryOnclick()
+            uploadChooserNotifierInterface?.galleryOnClick()
         }
     }
 }

@@ -31,23 +31,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListener() {
         upload_image.setOnClickListener {
-            UploadChooser().apply {
-                addNotifier(object : UploadChooser.UploadChooserNotifierInterface{
-                    override fun cameraOnclick() {
+            uploadChooser = UploadChooser().apply {
+                addNotifier(object : UploadChooser.UploadChooserNotifierInterface {
+                    override fun cameraOnClick() {
                         Log.d("upload", "cameraOnClick")
-
-                        // 권한 작업을 진행 - camera
                         checkCameraPermission()
                     }
 
-                    override fun galleryOnclick() {
+                    override fun galleryOnClick() {
                         Log.d("upload", "galleryOnClick")
-
-                        // 권한 작업을 진행 - gallery
                         checkGalleryPermission()
                     }
                 })
-            }.show(supportFragmentManager, "")
+            }
+            uploadChooser!!.show(supportFragmentManager, "")
         }
     }
 
@@ -62,10 +59,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkGalleryPermission(){
-        PermissionUtil().requestPermission(
+        if (PermissionUtil().requestPermission(
             this,
             GALLERY_PERMISSION_REQUEST,
             permission.READ_EXTERNAL_STORAGE,
+            )
+        ) openGallery()
+    }
+
+    private fun openGallery() {
+        val intent = Intent().apply {
+            setType("image/*")
+            setAction(Intent.ACTION_GET_CONTENT)
+        }
+        startActivityForResult(
+            Intent.createChooser(intent, "Select a photo"),
+            GALLERY_PERMISSION_REQUEST
         )
     }
 
@@ -90,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when (requestCode) {
             CAMERA_PERMISSION_REQUEST -> {
                 if (resultCode != Activity.RESULT_OK) return
                 val photoUri = FileProvider.getUriForFile(
@@ -100,13 +109,14 @@ class MainActivity : AppCompatActivity() {
                 )
                 uploadImage(photoUri)
             }
+            GALLERY_PERMISSION_REQUEST -> data?.let { uploadImage(it.data) }
         }
     }
 
-    private fun uploadImage(imageUri: Uri) {
+    private fun uploadImage(imageUri: Uri?) {
         val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-
         uploaded_image.setImageBitmap(bitmap)
+        uploadChooser?.dismiss()
     }
 
     private fun createCameraFile(): File {
@@ -122,7 +132,12 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             GALLERY_PERMISSION_REQUEST -> {
-
+                if (PermissionUtil().permissionGranted(
+                        requestCode,
+                        GALLERY_PERMISSION_REQUEST,
+                        grantResults
+                    )
+                ) openGallery()
             }
 
             CAMERA_PERMISSION_REQUEST -> {
