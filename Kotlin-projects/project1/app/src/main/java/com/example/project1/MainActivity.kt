@@ -1,10 +1,10 @@
 package com.example.project1
 
 import android.Manifest.*
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.Image
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private val GALLERY_PERMISSION_REQUEST = 1001
     private val FILE_NAME = "picture.jpg"
     private var uploadChooser: UploadChooser? = null
-    private val CLOUD_VISION_API_KEY = "AIzaSyCtQDpRnz902eoIXbVDubst2_hJeIWUl_8"
+    private val CLOUD_VISION_API_KEY = "."
     private val ANDROID_PACKAGE_HEADER = "X-Android-Package"
     private val ANDROID_CERT_HEADER = "X-Android_Cert"
     private val MAX_LABEL_RESULTS = 10
@@ -112,11 +112,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    @Deprecated("Deprecated in Java", ReplaceWith(
-        "super.onActivityResult(requestCode, resultCode, data)",
-        "androidx.appcompat.app.AppCompatActivity"
-    )
-    )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -141,7 +136,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestCloudVisionApi(bitmap: Bitmap) {
-//        val visionTask = ImageRequestTask(this, )
+        val visionTask = ImageRequestTask(this, prepareImageRequest(bitmap))
+        visionTask.execute()
     }
 
     private fun prepareImageRequest(bitmap: Bitmap): Vision.Images.Annotate {
@@ -149,7 +145,6 @@ class MainActivity : AppCompatActivity() {
         val jsonFactory = GsonFactory.getDefaultInstance()
 
         val requestInitializer = object : VisionRequestInitializer(CLOUD_VISION_API_KEY){
-            @RequiresApi(Build.VERSION_CODES.P)
             override fun initializeVisionRequest(request: VisionRequest<*>?) {
                 super.initializeVisionRequest(request)
 
@@ -192,7 +187,6 @@ class MainActivity : AppCompatActivity() {
         return annotateRequest
     }
 
-    @SuppressLint("StaticFieldLeak")
     inner class ImageRequestTask constructor(
         activity: MainActivity,
         val request: Vision.Images.Annotate
@@ -204,9 +198,7 @@ class MainActivity : AppCompatActivity() {
             weakReference =  WeakReference(activity)
         }
 
-
-        @Deprecated("Deprecated in Java")
-        override fun doInBackground(vararg p0: Any?): String {
+        override fun doInBackground(vararg params: Any?): String {
             try {
                 val response = request.execute()
                 return convertResponseToString(response)
@@ -217,11 +209,11 @@ class MainActivity : AppCompatActivity() {
             return "분석 실패"
         }
 
-        @Deprecated("Deprecated in Java",
-            ReplaceWith("super.onPostExecute(result)", "android.os.AsyncTask")
-        )
         override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
+            val activity = weakReference.get()
+            if (activity != null && !activity.isFinishing) {
+                uploaded_image_result.text = result
+            }
         }
     }
 

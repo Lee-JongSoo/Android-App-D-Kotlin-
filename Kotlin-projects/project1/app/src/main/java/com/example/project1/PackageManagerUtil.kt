@@ -10,14 +10,12 @@ import java.lang.Exception
 import java.security.MessageDigest
 
 class PackageManagerUtil {
-
-    @RequiresApi(Build.VERSION_CODES.P)
     fun getSignature(pm: PackageManager, packageName: String): String? {
-        return try {
-            val packageInfo =
-                pm.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            if (packageInfo?.signatures == null
-                || packageInfo.signatures.isEmpty()
+        try {
+            val packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            return if (packageInfo == null
+                || packageInfo.signatures == null
+                || packageInfo.signatures.size == 0
                 || packageInfo.signatures[0] == null
             ) {
                 null
@@ -25,18 +23,18 @@ class PackageManagerUtil {
                 signatureDigest(packageInfo.signatures[0])
             }
         } catch (e: java.lang.Exception) {
-            null
+            return null
         }
     }
 
     private fun signatureDigest(sig: Signature): String? {
         val signature = sig.toByteArray()
-        return try {
+        try {
             val md = MessageDigest.getInstance("SHA1")
             val digest = md.digest(signature)
-            BaseEncoding.base16().lowerCase().encode(digest)
+            return BaseEncoding.base16().lowerCase().encode(digest)
         } catch (e: Exception) {
-            null
+            return null
         }
     }
 }
