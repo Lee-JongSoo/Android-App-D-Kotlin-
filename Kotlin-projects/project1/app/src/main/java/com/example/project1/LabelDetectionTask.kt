@@ -108,6 +108,7 @@ class LabelDetectionTask (
                     init {
                         val labelDetection = Feature()
                         labelDetection.type = "LABEL_DETECTION"
+//                        labelDetection.type = "LANDMARK_DETECTION"
                         labelDetection.maxResults = MAX_LABEL_RESULTS
                         add(labelDetection)
                     }
@@ -123,6 +124,7 @@ class LabelDetectionTask (
     private fun convertResponseToString(response: BatchAnnotateImagesResponse): String {
         val message = StringBuilder("분설 결과\n")
         val labels = response.responses[0].labelAnnotations
+//        val labels = response.responses[0].landmarkAnnotations
 
         labels?.let {
             it.forEach {

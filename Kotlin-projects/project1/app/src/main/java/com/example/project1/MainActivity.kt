@@ -134,7 +134,8 @@ class MainActivity : AppCompatActivity() {
         val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
         uploaded_image.setImageBitmap(bitmap)
         uploadChooser?.dismiss()
-        requestCloudVisionApi(bitmap)
+//        requestCloudVisionApi(bitmap)
+        DetectionChooser().show(supportFragmentManager, "")
     }
 
     private fun requestCloudVisionApi(bitmap: Bitmap) {
