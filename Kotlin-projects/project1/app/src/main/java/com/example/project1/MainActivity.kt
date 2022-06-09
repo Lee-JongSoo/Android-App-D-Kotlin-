@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val FILE_NAME = "picture.jpg"
     private var uploadChooser: UploadChooser? = null
     private var labelDetectionTask: LabelDetectionTask? = null
+    val LABEL_DETECTION_REQUEST = "label_detection_request"
+    val LANDMARK_DETECTION_REQUEST = "landmark_detection_request"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,26 +142,26 @@ class MainActivity : AppCompatActivity() {
             .DetectionChooserNotifierInterface {
                 override fun detectLabel() {
                     findViewById<ImageView>(R.id.uploaded_image).setImageBitmap(bitmap)
+                    requestCloudVisionApi(bitmap, LABEL_DETECTION_REQUEST)
                 }
 
                 override fun detectLandmark() {
                     findViewById<ImageView>(R.id.uploaded_image).setImageBitmap(bitmap)
+                    requestCloudVisionApi(bitmap, LANDMARK_DETECTION_REQUEST)
                 }
 
             })
         }.show(supportFragmentManager, "")
 
-        //        requestCloudVisionApi(bitmap)
-
     }
 
-    private fun requestCloudVisionApi(bitmap: Bitmap) {
+    private fun requestCloudVisionApi(bitmap: Bitmap, requestType: String ) {
         labelDetectionTask?.requestCloudVisionApi(bitmap, object: LabelDetectionTask
         .LabelDetectionNotifierInterface{
             override fun notifiyResult(result: String) {
                 uploaded_image_result.text = result
             }
-        })
+        }, requestType)
     }
 
     private fun createCameraFile(): File {

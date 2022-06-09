@@ -21,28 +21,29 @@ class LabelDetectionTask (
     private val packageName: String,
     private val packageManager: PackageManager,
     private val activity: MainActivity
+) {
 
-)
-    {
+    private val CLOUD_VISION_API_KEY = "."
+    private val ANDROID_CERT_HEADER = "X-Android_Cert"
+    private val ANDROID_PACKAGE_HEADER = "X-Android-Package"
+    private val MAX_LABEL_RESULTS = 10
+    private var labelDetectionNotifierInterface: LabelDetectionNotifierInterface? = null
+    private var requestType: String? = null
 
-        private val CLOUD_VISION_API_KEY = "."
-        private val ANDROID_PACKAGE_HEADER = "X-Android-Package"
-        private val ANDROID_CERT_HEADER = "X-Android_Cert"
-        private val MAX_LABEL_RESULTS = 10
-        private var labelDetectionNotifierInterface: LabelDetectionNotifierInterface? = null
+    interface LabelDetectionNotifierInterface {
+        fun notifiyResult(result: String)
+    }
 
-        interface LabelDetectionNotifierInterface {
-            fun notifiyResult(result: String)
-        }
-
-         fun requestCloudVisionApi(
-             bitmap: Bitmap,
-             labelDetectionNotifierInterface: LabelDetectionNotifierInterface
-         ) {
-             this.labelDetectionNotifierInterface = labelDetectionNotifierInterface
-             val visionTask = ImageRequestTask(prepareImageRequest(bitmap))
-             visionTask.execute()
-        }
+    fun requestCloudVisionApi(
+        bitmap: Bitmap,
+        labelDetectionNotifierInterface: LabelDetectionNotifierInterface,
+        requestType: String
+    ) {
+        this.requestType = requestType
+        this.labelDetectionNotifierInterface = labelDetectionNotifierInterface
+        val visionTask = ImageRequestTask(prepareImageRequest(bitmap))
+        visionTask.execute()
+    }
 
     inner class ImageRequestTask constructor(
         val request: Vision.Images.Annotate
@@ -57,7 +58,7 @@ class LabelDetectionTask (
         override fun doInBackground(vararg params: Any?): String {
             try {
                 val response = request.execute()
-                return convertResponseToString(response)
+                return findProperResponseType(response)
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -107,8 +108,13 @@ class LabelDetectionTask (
                 annotateImageRequest.features = object : ArrayList<Feature>() {
                     init {
                         val labelDetection = Feature()
-                        labelDetection.type = "LABEL_DETECTION"
-//                        labelDetection.type = "LANDMARK_DETECTION"
+                        when (requestType) {
+                            activity.LABEL_DETECTION_REQUEST -> labelDetection.type =
+                                "LABEL_DETECTION"
+                            activity.LANDMARK_DETECTION_REQUEST -> labelDetection.type =
+                                "LANDMARK_DETECTION"
+
+                        }
                         labelDetection.maxResults = MAX_LABEL_RESULTS
                         add(labelDetection)
                     }
@@ -121,18 +127,24 @@ class LabelDetectionTask (
         return annotateRequest
     }
 
-    private fun convertResponseToString(response: BatchAnnotateImagesResponse): String {
-        val message = StringBuilder("분설 결과\n")
-        val labels = response.responses[0].labelAnnotations
-//        val labels = response.responses[0].landmarkAnnotations
-
-        labels?.let {
-            it.forEach {
-                message.append(String.format(Locale.US, "%.3f: %s", it.score, it.description))
-                message.append("\n")
+    private fun findProperResponseType(response: BatchAnnotateImagesResponse): String {
+        when (requestType) {
+            activity.LABEL_DETECTION_REQUEST -> {
+                return convertResponseToString(response.responses[0].labelAnnotations)
             }
-            return message.toString()
+            activity.LANDMARK_DETECTION_REQUEST -> {
+                return convertResponseToString(response.responses[0].landmarkAnnotations)
+            }
         }
         return "분석 실패"
+    }
+
+    private fun convertResponseToString(labels: List<EntityAnnotation>): String {
+        val message = StringBuilder("분석 결과\n")
+        labels.forEach {
+            message.append(String.format(Locale.US, "%.3f: %s", it.score, it.description))
+            message.append("\n")
+        }
+        return message.toString()
     }
 }
