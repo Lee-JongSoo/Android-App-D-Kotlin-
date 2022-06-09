@@ -24,4 +24,26 @@ class DetectionChooser : DialogFragment() {
         return inflater.inflate(R.layout.detection_chooser, container, false)
     }
 
+    fun addDetectionChooserNotifierInterface(listener: DetectionChooserNotifierInterface) {
+        detectionChooserNotifierInterface = listener
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setupListener()
+    }
+
+    private fun setupListener() {
+        detect_label.setOnClickListener {
+            detectionChooserNotifierInterface?.detectLabel()
+            dismiss()
+        }
+        detect_landmark.setOnClickListener {
+            detectionChooserNotifierInterface?.detectLandmark()
+            dismiss()
+        }
+        detect_cancel.setOnClickListener {
+            dismiss()
+        }
+    }
 }

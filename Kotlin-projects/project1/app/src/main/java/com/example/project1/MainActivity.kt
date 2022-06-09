@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.google.api.client.extensions.android.http.AndroidHttp
@@ -132,10 +133,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun uploadImage(imageUri: Uri?) {
         val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-        uploaded_image.setImageBitmap(bitmap)
         uploadChooser?.dismiss()
-//        requestCloudVisionApi(bitmap)
-        DetectionChooser().show(supportFragmentManager, "")
+
+        DetectionChooser().apply {
+            addDetectionChooserNotifierInterface(object: DetectionChooser
+            .DetectionChooserNotifierInterface {
+                override fun detectLabel() {
+                    findViewById<ImageView>(R.id.uploaded_image).setImageBitmap(bitmap)
+                }
+
+                override fun detectLandmark() {
+                    findViewById<ImageView>(R.id.uploaded_image).setImageBitmap(bitmap)
+                }
+
+            })
+        }.show(supportFragmentManager, "")
+
+        //        requestCloudVisionApi(bitmap)
+
     }
 
     private fun requestCloudVisionApi(bitmap: Bitmap) {
